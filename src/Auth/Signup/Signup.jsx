@@ -2,10 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import signupImage from "../../assets/others/authentication2.png";
 import { useContext } from "react";
 import { AuthContext } from "../../Context/AuthProvider";
+import SocialLogin from "../../Shared/SocialLogin/SocialLogin";
+import usePublicAxios from "../../Hooks/usePublicAxios";
 
 const Signup = () => {
   const { createUser, setUser, userProfileUpdate } = useContext(AuthContext);
   const navigate = useNavigate();
+  const publicAxios = usePublicAxios();
   const handleSignupSubmit = (e) => {
     e.preventDefault();
 
@@ -19,9 +22,17 @@ const Signup = () => {
       .then((res) => {
         const signUpUser = res.user;
         console.log(signUpUser);
-        userProfileUpdate(name, photo);
+        userProfileUpdate(name, photo).then(() => {
+          const userInfo = {
+            name: name,
+            email: email,
+          };
+          publicAxios.post("/users", userInfo).then((res) => {
+            console.log(res.data);
+          });
+        });
         setUser({ ...signUpUser, displayName: name, photoURL: photo });
-        navigate("/login");
+        navigate("/");
       })
       .catch((error) => {
         console.log(error.message);
@@ -99,6 +110,9 @@ const Signup = () => {
             value="Sign Up"
           />
         </form>
+        <div>
+          <SocialLogin />
+        </div>
 
         <p className="text-center text-gray-600 mt-6">
           Already have an account?

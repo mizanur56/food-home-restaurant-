@@ -7,7 +7,8 @@ import {
 } from "react-simple-captcha";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Context/AuthProvider";
-import { FaGoogle } from "react-icons/fa";
+
+import SocialLogin from "../../Shared/SocialLogin/SocialLogin";
 
 const Login = () => {
   const [disabled, setDisabled] = useState(true);
@@ -48,17 +49,6 @@ const Login = () => {
     }
   };
 
-  const handleGoogleLogin = () => {
-    googleLogin()
-      .then((res) => {
-        console.log(res.user);
-        setUser(res.user);
-        navigate(from, { replace: true });
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  };
   return (
     <div className="min-h-screen flex flex-col lg:flex-row gap-6 items-center justify-center p-6 bg-gray-100">
       {/* Left Image */}
@@ -163,14 +153,8 @@ const Login = () => {
             value="Sign in"
           />
         </form>
-        <div
-          onClick={handleGoogleLogin}
-          className="flex  items-center justify-center gap-2 my-2"
-        >
-          <p className="text-lg font-medium border-b border-gray-800 py-1">
-            Sign in with Google
-          </p>
-          <FaGoogle className="text-red-700 text-xl" />
+        <div>
+          <SocialLogin />
         </div>
         <p className="text-center text-gray-600 mt-6">
           Do not have an account?

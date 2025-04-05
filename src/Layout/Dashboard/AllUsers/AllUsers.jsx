@@ -1,17 +1,30 @@
+import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import useCart from "../../Hooks/useCart";
+import { FaHandHoldingMedical, FaUser, FaUsers } from "react-icons/fa";
 import Swal from "sweetalert2";
-import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
-const Cart = () => {
-  const [cart, refetch] = useCart();
+const AllUsers = () => {
   const axiosSecure = useAxiosSecure();
 
-  // Calculate total price dynamically
-  const totalPrice = cart.reduce((total, item) => total + item.price, 0);
+  const { data: users = [], refetch } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/users");
+      return res.data;
+    },
+  });
 
-  // delete item from cart and server
-  const handleDelete = (id, name) => {
+  const handleMakeAdmin = (user) => {
+    axiosSecure.patch(`users/admin/${user._id}`).then((res) => {
+      if (res.data.modifiedCount) {
+        refetch();
+        alert("Admin");
+      }
+    });
+  };
+
+  const handleDeleteUser = (user) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -22,13 +35,13 @@ const Cart = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosSecure.delete(`/cart/${id}`).then((res) => {
-          console.log(res);
+        axiosSecure.delete(`/users/${user._id}`).then((res) => {
+          console.log(res.data);
           if (res.data.deletedCount) {
             refetch();
             Swal.fire({
               title: "Deleted!",
-              text: `${name} has been removed from the cart.`,
+              text: `${user.name} has been removed from the user list.`,
               icon: "success",
             });
           }
@@ -38,17 +51,11 @@ const Cart = () => {
   };
 
   return (
-    <div className="p-6">
-      {/* Header Section */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl">Total Items: {cart.length}</h2>
-        <h2 className="text-3xl">Total Price: ${totalPrice.toFixed(2)}</h2>
-        <button className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-teal-600 transition">
-          Pay
-        </button>
+    <div>
+      <div className="flex items-center justify-evenly">
+        <h1 className="text-3xl font-medium">All Users</h1>
+        <h1 className="text-3xl font-medium">Total Users: {users.length}</h1>
       </div>
-
-      {/* Table Section */}
       <div className="flex items-center justify-center px-4">
         <div className="overflow-x-auto w-full">
           <table className="min-w-full bg-white shadow-md rounded-lg border border-gray-200">
@@ -58,52 +65,59 @@ const Cart = () => {
                   #
                 </th>
                 <th className="px-6 py-4 text-left text-gray-600 font-medium">
-                  Item Image
+                  NAME
                 </th>
                 <th className="px-6 py-4 text-center text-gray-600 font-medium">
-                  Item Name
+                  EMAIL
                 </th>
                 <th className="px-6 py-4 text-center text-gray-600 font-medium">
-                  Price
+                  ROLE
                 </th>
                 <th className="px-6 py-4 text-center text-gray-600 font-medium">
-                  Action
+                  ACTION
                 </th>
               </tr>
             </thead>
             <tbody>
-              {cart.map((item, index) => (
+              {users.map((user, index) => (
                 <tr
-                  key={item.id}
+                  key={index}
                   className="border-b even:bg-gray-100 hover:bg-gray-200"
                 >
                   {/* Item Number */}
                   <td className="px-3 align-middle text-center">
                     <p className="text-gray-800 font-medium">{index + 1}</p>
                   </td>
-                  {/* Item Image */}
-                  <td className="px-6 py-4 align-middle">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-12 h-12 rounded-md"
-                    />
-                  </td>
 
-                  {/* Item Name */}
+                  {/* User Name */}
                   <td className="px-3 align-middle text-center">
-                    <p className="text-gray-800 font-medium">{item.name}</p>
+                    <p className="text-gray-800 font-medium">{user.name}</p>
+                  </td>
+                  {/* User Email */}
+                  <td className="px-3 align-middle text-center">
+                    <p className="text-gray-800 font-medium">{user.email}</p>
                   </td>
 
-                  {/* Price */}
-                  <td className="px-6 py-4 align-middle text-center">
-                    ${item.price.toFixed(2)}
+                  {/* Action (Admin Icon) */}
+                  <td className="px-6 py-4 align-middle">
+                    {user.role === "admin" ? (
+                      "Admin"
+                    ) : (
+                      <div
+                        onClick={() => handleMakeAdmin(user)}
+                        className="flex justify-center items-center"
+                      >
+                        <FaUsers
+                          size={22}
+                          className="text-red-600 cursor-pointer hover:text-red-800 transition duration-200"
+                        />
+                      </div>
+                    )}
                   </td>
-
                   {/* Action (Delete Icon) */}
                   <td className="px-6 py-4 align-middle">
                     <div
-                      onClick={() => handleDelete(item._id, item.name)}
+                      onClick={() => handleDeleteUser(user)}
                       className="flex justify-center items-center"
                     >
                       <RiDeleteBin5Line
@@ -122,4 +136,4 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+export default AllUsers;

@@ -103,7 +103,7 @@ const Navbar = () => {
   );
 
   return (
-    <nav className="bg-opacity-30  bg-white/0 rounded-lg backdrop-blur-lg backdrop-opacity-95 p-4 fixed z-10 max-w-6xl text-white mx-auto w-full">
+    <nav className="bg-opacity-30  bg-white/0 rounded-lg backdrop-blur-lg backdrop-opacity-95 p-2 fixed z-10 max-w-6xl text-white mx-auto w-full">
       <div className=" max-w-7xl mx-auto flex justify-between items-center px-4">
         {/* Mobile Menu Button */}
         <div className="lg:hidden">

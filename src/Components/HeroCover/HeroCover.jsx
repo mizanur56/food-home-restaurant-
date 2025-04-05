@@ -1,7 +1,7 @@
 const HeroCover = ({ img, title, para }) => {
   return (
     <div
-      className="relative min-h-screen my-5 flex items-center justify-center bg-cover bg-center"
+      className="relative min-h-screen flex items-center justify-center bg-cover bg-center"
       style={{
         backgroundImage: `url(${img})`,
       }}

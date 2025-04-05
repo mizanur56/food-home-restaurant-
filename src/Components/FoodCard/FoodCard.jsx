@@ -59,7 +59,7 @@ const FoodCard = ({ item }) => {
         <img
           src={image}
           alt={name}
-          className="rounded-xl w-full object-cover"
+          className="rounded-xl w-60 h-60 object-cover"
         />
       </div>
       <p className="bg-black text-white px-3 py-1 absolute top-12 right-12">
