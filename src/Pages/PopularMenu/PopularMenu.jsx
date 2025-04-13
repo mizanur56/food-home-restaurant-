@@ -13,8 +13,8 @@ const PopularMenu = () => {
         {" "}
       </SectionTitle>
       <div className="grid md:grid-cols-2 gap-3">
-        {popularMenu.map((item) => (
-          <MenuItem item={item} key={menu._id}></MenuItem>
+        {popularMenu.map((item, index) => (
+          <MenuItem item={item} key={index}></MenuItem>
         ))}
       </div>
     </section>

@@ -2,6 +2,7 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import useCart from "../../Hooks/useCart";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const [cart, refetch] = useCart();
@@ -23,7 +24,7 @@ const Cart = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axiosSecure.delete(`/cart/${id}`).then((res) => {
-          console.log(res);
+          // console.log(res);
           if (res.data.deletedCount) {
             refetch();
             Swal.fire({
@@ -43,9 +44,11 @@ const Cart = () => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl">Total Items: {cart.length}</h2>
         <h2 className="text-3xl">Total Price: ${totalPrice.toFixed(2)}</h2>
-        <button className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-teal-600 transition">
-          Pay
-        </button>
+        <Link to={"/dashboard/payment"}>
+          <button className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-teal-600 transition">
+            Pay
+          </button>
+        </Link>
       </div>
 
       {/* Table Section */}

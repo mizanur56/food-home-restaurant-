@@ -15,8 +15,6 @@ const FoodCard = ({ item }) => {
 
   const handleAddCart = () => {
     if (user && user.email) {
-      console.log("hello");
-
       const cartItem = {
         menuId: _id,
         email: user.email,
@@ -26,7 +24,7 @@ const FoodCard = ({ item }) => {
       };
 
       axiosSecure.post("/cart", cartItem).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         if (res.data.insertedId) {
           Swal.fire({
             title: "Thank you!",
@@ -38,13 +36,13 @@ const FoodCard = ({ item }) => {
       });
     } else {
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: "Are you logged in?",
+        text: "If you are not logged user..Please Log in!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: "Yes, i want to logged in!",
       }).then((result) => {
         if (result.isConfirmed) {
           navigate("/login", { state: { from: location } });
@@ -53,7 +51,7 @@ const FoodCard = ({ item }) => {
     }
   };
   return (
-    <div className="bg-white relative w-96 shadow-sm rounded-lg overflow-hidden border border-gray-200">
+    <div className="bg-white relative  shadow-sm rounded-lg overflow-hidden border border-gray-200">
       {/* Image */}
       <div className="p-10 flex justify-center">
         <img
